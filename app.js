@@ -17,19 +17,93 @@ app.get('/test', (req, res) => {
     });
 });
 
-app.get('/group/:id', (req, res) => {
-    const groupId = req.params.id;
-    /*
-     id - is a parameter from URL. You can go to 'http://localhost:8080/group/1',
-     where 1 is an id of group of students
-     */
+app.get('/students/grade/:grade', (req, res) => {
+    const grade = req.params.grade;
 
-    models.Student.getStudentsForGroup(groupId)
+    models.Student.getStudentsWithGrade(grade)
         .then((students) => {
             res.render('group', {students: students});
+        });
+});
+
+app.get('/student/:id', (req, res) => {
+    const id = req.params.id;
+
+    models.Student.getStudentById(id)
+        .then((student) => {
+            res.render('student', student);
         });
 });
 
 http.createServer(app).listen(8080, () => {
     console.log('Express server listening on port 8080');
 });
+
+let myCoolStydent = {
+    firstName: 'Alex',
+    lastName: 'Tester',
+    phone: '+72342343243243',
+
+    sayHello: function() {
+        console.log('Hello!');
+    }
+};
+
+let myCoolStydent1 = {
+    firstName: 'Alex',
+    lastName: 'Tester',
+    phone: '+72342343243243',
+
+    sayHello: function() {
+        console.log('Hello!');
+    }
+};
+
+let myCoolStydent2 = {
+    firstName: 'Alex',
+    lastName: 'Tester',
+    phone: '+72342343243243',
+
+    sayHello: function() {
+        console.log('Hello!');
+    }
+};
+
+// function Student(firstName, lastName, phone) {
+//     this.firstName = firstName;
+//     this.lastName = lastName;
+//     this.phone = phone;
+// }
+//
+// Student.prototype.sayHello = function() {
+//     console.log('Hello!');  
+// };
+
+// class Student {
+//     constructor(firstName, lastName, phone) {
+//         this.firstName = firstName;
+//         this.lastName = lastName;
+//         this.phone = phone;
+//     }
+//    
+//     sayHello() {
+//         console.log('Hello!');
+//     }
+// }
+//
+// let myCoolStydent3 = new Student('Alex', 'Tester', '23234');
+// let myCoolStydent4 = new Student('Alexa', 'Tesdfasfdter', '23234');
+// myCoolStydent3.sayHello();
+// myCoolStydent4.sayHello();
+//
+// console.log(myCoolStydent3.sayHello === myCoolStydent4.sayHello);
+
+//myCoolStydent.sayHello(); //Hello!
+
+
+function addStudentToDatabase(studentData) {
+    db.table('Student')
+        .insert(studentData);
+}
+
+//addStudentToDatabase(myCoolStydent);

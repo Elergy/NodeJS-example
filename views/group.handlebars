@@ -1,7 +1,7 @@
 Students (with .toString() method):<br>
 <ul>
     {{#each students}}
-        <li>{{this}}</li>
+        <li><a href="/student/{{id}}">{{this}}</a></li>
     {{/each}}
 </ul>
 <br>
@@ -9,6 +9,6 @@ Students (with .toString() method):<br>
 Students' surnames:<br>
 <ul>
     {{#each students}}
-        <li>{{this.surname}}</li>
+        <li>{{this.last_name}}</li>
     {{/each}}
 </ul>

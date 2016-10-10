@@ -1,36 +1,33 @@
 const db = require('./../database/db');
 
-function Student(data) {
-    this.id = data.id;
-    this.name = data.name;
-    this.surname = data.surname;
+const Person = require('./person');
+
+class Student extends Person {
+    constructor(data) {
+        super();
+        
+        this.id = data.id;
+        this.first_name = data.first_name;
+        this.last_name = data.last_name;
+    }
+
+    static getStudentsWithGrade(grade) {
+        return db('Student')
+            .where('grade', grade)
+            .then((studentsData) => {
+                return studentsData.map((studentData) => new Student(studentData));
+            });
+    }
+    
+    static getStudentById(id) {
+        return db('Student')
+            .where('id', id)
+            .then((studentsData) => {
+                const studentData = studentsData[0];
+                
+                return new Student(studentData);
+            });
+    }
 }
-
-Student.prototype.toString = function() {
-    /*
-     We can use handlebars-template like that:
-     {{#each students}}
-        {{this}}
-     {{/each}}
-
-     because {{this}} runs the .toString() method and prints the string representation of Student
-     */
-    return this.name + ' ' + this.surname;
-};
-
-Student.prototype.getClassesForStudent = function() {
-    /*
-     now we don't have a Class table in DB, but where we create, we'll write the code
-     to return information about classes the student assigned.
-     */
-};
-
-Student.getStudentsForGroup = function(groupId) {
-    return db('Student')
-        .where('group_id', groupId)
-        .then((studentsData) => {
-            return studentsData.map((studentData) => new Student(studentData));
-        });
-};
 
 module.exports = Student;
