@@ -1,4 +1,11 @@
 First Name: {{first_name}}<br>
 Last Name: {{last_name}}<br>
 
+Parents:
+<ul>
+    {{#each parents}}
+        <li>{{this}}</li>
+    {{/each}}
 
+    <a href="/student/{{id}}/add-parent">Add parent</a>
+</ul>

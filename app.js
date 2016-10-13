@@ -5,11 +5,13 @@ const http = require('http');
 const exphbs = require('express-handlebars');
 
 const models = require('./models');
+const bodyParser = require('body-parser');
 
 const app = express();
 
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
+app.use(bodyParser());
 
 app.get('/test', (req, res) => {
     res.json({
@@ -32,6 +34,21 @@ app.get('/student/:id', (req, res) => {
     models.Student.getStudentById(id)
         .then((student) => {
             res.render('student', student);
+        });
+
+    
+});
+
+app.get('/student/:id/add-parent', (req, res) => {
+    res.render('add-parent', {id: req.params.id});
+});
+
+app.post('/student/:id/parent', (req, res) => {
+    const id = req.params.id;
+
+    models.Student.getStudentById(id)
+        .then((student) => {
+            student.addParent(req.body);
         });
 });
 
@@ -107,3 +124,25 @@ function addStudentToDatabase(studentData) {
 }
 
 //addStudentToDatabase(myCoolStydent);
+
+let a = [1, 2, 3, 4, 5];
+
+// for (let i=0; i< a.length; i++ ) {
+//     console.log(a[i]);
+// }
+
+// let b = a.filter(function(element, index) {
+//     const isLessThanFour = element < 4;
+//    
+//     console.log(`element = ${element}, index = ${index}, result = ${isLessThanFour}`);
+//    
+//     return isLessThanFour;
+// });
+
+// let sum = a.reduce(function(tempSum, currentElement) {
+//     tempSum = tempSum + currentElement;
+//
+//     return tempSum;
+// }, 0);
+//
+// console.log(sum);
