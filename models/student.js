@@ -14,7 +14,16 @@ class Student extends Person {
     
     addParent(data) {
         const parent = new Parent(data);
-        console.log(parent);
+
+        parent
+            .saveToDB()
+            .then((idOfParent) => {
+                return db('Parent_Student')
+                    .insert({
+                        parent_id: idOfParent,
+                        student_id: this.id
+                    });
+            });
     }
 
     loadParentsForStudent() {

@@ -35,8 +35,6 @@ app.get('/student/:id', (req, res) => {
         .then((student) => {
             res.render('student', student);
         });
-
-    
 });
 
 app.get('/student/:id/add-parent', (req, res) => {
@@ -48,7 +46,10 @@ app.post('/student/:id/parent', (req, res) => {
 
     models.Student.getStudentById(id)
         .then((student) => {
-            student.addParent(req.body);
+            return student.addParent(req.body);
+        })
+        .then(() => {
+            res.redirect('/student/' + req.params.id);
         });
 });
 
