@@ -28,6 +28,12 @@ app.get('/students/grade/:grade', (req, res) => {
         });
 });
 
+// router.get('/:id', () => {
+//     //
+// });
+//
+// app.use('/student', )
+
 app.get('/student/:id', (req, res) => {
     const id = req.params.id;
 
@@ -51,6 +57,32 @@ app.post('/student/:id/parent', (req, res) => {
         .then(() => {
             res.redirect('/student/' + req.params.id);
         });
+});
+
+app.get('/register', (req, res) => {
+    res.render('registration');
+});
+
+app.post('/user', (req, res) => {
+    const email = req.body.email;
+    const password = req.body.password;
+    
+    const user = new models.User({
+        email: email,
+        password: password
+    }, true);
+    
+    user.saveToDB()
+        .then(() => {
+            res.json({
+                ok: true
+            })
+        })
+        .catch((ex) => {
+            res.json({
+                exception: ex.message
+            });
+        })
 });
 
 http.createServer(app).listen(8080, () => {

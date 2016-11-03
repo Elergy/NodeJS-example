@@ -60,7 +60,7 @@ class Student extends Person {
             .then((studentsData) => {
                 const studentData = studentsData[0];
                 
-                let student =  new Student(studentData);
+                let student = new Student(studentData);
                 return student.loadParentsForStudent();
             });
     }
