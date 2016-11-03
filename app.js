@@ -6,12 +6,15 @@ const exphbs = require('express-handlebars');
 
 const models = require('./models');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 
 const app = express();
 
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
 app.use(bodyParser());
+app.use(cookieParser());
+app.use(require('./middlewares/authentication-middleware'));
 
 app.get('/test', (req, res) => {
     res.json({
@@ -20,6 +23,7 @@ app.get('/test', (req, res) => {
 });
 
 app.get('/students/grade/:grade', (req, res) => {
+    console.log(req.user);
     const grade = req.params.grade;
 
     models.Student.getStudentsWithGrade(grade)
@@ -50,6 +54,24 @@ app.post('/student/:id/parent', (req, res) => {
         })
         .then(() => {
             res.redirect('/student/' + req.params.id);
+        });
+});
+
+app.get('/user/register', (req, res) => {
+    res.render('register');
+});
+
+app.post('/user', (req, res) => {
+    const user = new models.User({
+        email: req.body.email,
+        password: req.body.password
+    }, true);
+
+    user.saveToDB()
+        .then(() => {
+            res.cookie('session_id', `${user.id}.${user.sessionId}`);
+            
+            res.redirect('/students/grade/2')
         });
 });
 
