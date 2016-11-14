@@ -6,14 +6,23 @@ const exphbs = require('express-handlebars');
 
 const models = require('./models');
 const bodyParser = require('body-parser');
+const passport = require('passport');
+const session = require('express-session');
+
+require('./auth');
 
 const app = express();
 
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
 app.use(bodyParser());
+app.use(session({ secret: 'dslkfjqjfwerwer' }));
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.get('/test', (req, res) => {
+    console.log('hello! i am from test!');
+    console.log(req.user);
     res.json({
         ok: true
     });
@@ -49,7 +58,7 @@ app.get('/student/:id/add-parent', (req, res) => {
 
 app.post('/student/:id/parent', (req, res) => {
     const id = req.params.id;
-
+    
     models.Student.getStudentById(id)
         .then((student) => {
             return student.addParent(req.body);
@@ -62,6 +71,19 @@ app.post('/student/:id/parent', (req, res) => {
 app.get('/register', (req, res) => {
     res.render('registration');
 });
+
+app.get('/login', (req, res) => {
+    res.render('login');
+});
+
+app.post('/login', passport.authenticate(
+    'local', 
+    { 
+        successRedirect: '/students/grade/2',
+    
+        failureRedirect: '/login' 
+    })
+);
 
 app.post('/user', (req, res) => {
     const email = req.body.email;

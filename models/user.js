@@ -37,8 +37,32 @@ class User {
             .then((usersData) => {
                 const userData = usersData[0];
 
-                let user = new User(usersData);
+                console.log(userData);
+                let user = new User(userData);
+
+                return user;
             });
+    }
+
+    static getUserByEmail(email) {
+        return db('Users')
+            .where('email', email)
+            .then((usersData) => {
+                const userData = usersData[0];
+
+                let user = new User(userData);
+                
+                return user;
+                
+            });
+    }
+    
+    isPasswordValid(password) {
+        password = crypto.createHmac('sha256', '12345')
+            .update(password)
+            .digest('hex');
+        
+        return this.password === password;
     }
 
 
